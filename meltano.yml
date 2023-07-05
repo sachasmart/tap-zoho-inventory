@@ -1,0 +1,29 @@
+version: 1
+send_anonymous_usage_stats: false
+project_id: tap-zoho-inventory
+plugins:
+  extractors:
+  - name: tap-zoho-inventory
+    namespace: tap_zoho_inventory
+    pip_url: -e .
+    capabilities:
+    - state
+    - catalog
+    - discover
+    config:
+      created_time: '2010-01-01T00:00:00Z'
+      client_id: "TODO"
+      organization_id: "TODO" #USA
+    settings:
+    - name: access_token
+      kind: password
+    - name: refresh_token
+      kind: password
+    - name: client_id
+    - name: organization_id
+    - name: client_secret
+      kind: password
+  loaders:
+  - name: target-jsonl
+    variant: andyh1203
+    pip_url: target-jsonl
