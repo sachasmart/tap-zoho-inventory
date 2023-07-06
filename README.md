@@ -14,6 +14,25 @@ pipx install tap-zoho-inventory
 
 ## Configuration
 
+## Zoho Inventory
+
+1. [Zoho Inventory API Docs](https://www.zoho.com/inventory/api/v1/#introduction)
+2. Its a fairly annoying API to work with given the OAuth2 authorization. However, once a `refresh_token` is acquired it is somewhat straight forward. 1. To get a `refresh_token` (non-expiring token used to get `access_tokens`) you need to create a `code`. Visit: [Zoho API Console](https://api-console.zoho.com/client/1000.QZFPBX41GSLI12U9ASGDXSBKWFLT0F) and enter: 
+    1. `ZohoInventory.FullAccess.all` for both "Scope" and "Scope Description". May as well up the time duration to 10 minutes. Run the follow command to get `access_token` and `refresh_token` with the code (replace `{{code}}`, `{{redirect_uri}}`, `{{client_id}}`, `{{client_secret}}` with the values from the API Console)
+      ```bash
+           curl --location 'https://accounts.zoho.com/oauth/v2/token' \
+        --header 'Content-Type: application/x-www-form-urlencoded' \
+        --data-urlencode 'code={{code}}' \
+        --data-urlencode 'redirect_uri={{redirect_uri}}' \
+        --data-urlencode 'client_id={{client_id}}' \
+        --data-urlencode 'client_secret={{client_secret}}' \
+        --data-urlencode 'grant_type=authorization_code' \
+        --data-urlencode 'scope=ZohoInventory.FullAccess.all'
+      ```
+      3. Take the `refresh_token` and add run `meltano config tap-zoho-inventory set --interactive`. Set token values as needed (`refresh_token` and `access_token`).
+1. To view all the parameters for a `tap` run `meltano select <tap> --list --all`
+1. To invoke the tap (don't push data to a `loader`), run `meltano invoke tap-zoho-inventory` and the data will be outputted to `./output/out.jsonl`
+
 ### Accepted Config Options
 
 - [ ] `Developer TODO:` Provide a list of config options accepted by the tap.
@@ -61,7 +80,7 @@ poetry install
 ### Create and Run Tests
 
 Create tests within the `tap_zoho_inventory/tests` subfolder and
-  then run:
+then run:
 
 ```bash
 poetry run pytest
@@ -102,5 +121,5 @@ meltano elt tap-zoho-inventory target-jsonl
 
 ### SDK Dev Guide
 
-See the [dev guide](https://sdk.meltano.com/en/latest/dev_guide.html) for more instructions on how to use the SDK to 
+See the [dev guide](https://sdk.meltano.com/en/latest/dev_guide.html) for more instructions on how to use the SDK to
 develop your own taps and targets.
