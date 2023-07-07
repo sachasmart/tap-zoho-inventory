@@ -11,7 +11,7 @@ from tap_zoho_inventory.client import ZohoInventoryStream
 class ItemsStream(ZohoInventoryStream):
     """Define custom stream."""
 
-    name = "items"
+    name = "zoho_items"
     path = "/items"
     primary_keys = ["item_id"]
     replication_key = "last_modified_time"

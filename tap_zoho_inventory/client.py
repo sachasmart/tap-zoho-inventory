@@ -27,7 +27,7 @@ class ZohoInventoryStream(RESTStream):
     #     return self.config["api_url"]
 
     records_jsonpath = "$.items[*]"  # Or override `parse_response`.
-    next_page_token_jsonpath = "$.page_context['page']"  # Or override `get_next_page_token`.
+    next_page_token_jsonpath = "$.page_context['has_more_page']"  # Or override `get_next_page_token`.
 
     @property
     @cached
@@ -66,6 +66,7 @@ class ZohoInventoryStream(RESTStream):
     ) -> Dict[str, Any]:
         """Return a dictionary of values to be used in URL parameterization."""
         params: dict = {}
+        params["organization_id"] = self.config.get("organization_id")
         if next_page_token:
             params["page"] = next_page_token
         if self.replication_key:
